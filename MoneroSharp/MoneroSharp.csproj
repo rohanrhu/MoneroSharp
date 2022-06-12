@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Product>MoneroSharp</Product>
+    <Version>1.0.0</Version>
+    <Author>Oğuzhan Eroğlu (rohanrhu2@gmail.com)</Author>
+    <Company>Tabby Labs Inc.</Company>
+    <Copyright>Copyright (C) 2022, Tabby Labs Inc.</Copyright>
+    <Description>MoneroSharp is a .Net library for Monero</Description>
+    
+    <LangVersion>8.0</LangVersion>
+    <TargetFrameworks>net6.0; net5.0; net48; net472; netstandard2.1; netstandard2.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+
+    <NoWarn>8602, 8603, 8604</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nethereum.Util" Version="4.5.0" />
+  </ItemGroup>
+
+</Project>
