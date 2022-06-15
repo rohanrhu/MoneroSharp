@@ -123,7 +123,7 @@ namespace MoneroSharp {
                 DecodeBlock(data, blocks_length, decoded);
             }
             
-            return null;
+            return decoded;
         }
     }
 }
