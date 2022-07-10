@@ -11,9 +11,11 @@
 
 using System;
 using System.Text;
+using System.Linq;
+using System.Numerics;
 
 namespace MoneroSharp.Utils {
-     static class MoneroUtils
+     public static class MoneroUtils
      {
         public static byte[] HexBytesToBinary(String hex)
         {
@@ -31,6 +33,21 @@ namespace MoneroSharp.Utils {
                 hex.AppendFormat("{0:x2}", _byte);
             }
             return hex.ToString();
+        }
+
+        public static byte[] PrivateKeyToBytes(string private_key_hex)
+        {
+            var private_seed = BigInteger.Parse(
+                private_key_hex,
+                System.Globalization.NumberStyles.AllowHexSpecifier
+            ).ToByteArray().Reverse().ToArray();
+            return private_seed;
+        }
+
+        public static string PrivateSeedToHex(byte[] private_seed)
+        {
+            var private_key = new BigInteger(private_seed, false, true);
+            return private_key.ToString("X").ToLower();
         }
      }
  }

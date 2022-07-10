@@ -53,11 +53,7 @@ namespace MoneroSharp
 
         public MoneroAccount(string private_key_hex, MoneroNetwork network = MoneroNetwork.TESTNET)
         {
-            var private_seed = System.Numerics.BigInteger.Parse(
-                private_key_hex,
-                System.Globalization.NumberStyles.AllowHexSpecifier
-            ).ToByteArray().ToArray();
-
+            byte[] private_seed = MoneroUtils.PrivateKeyToBytes(private_key_hex);
             Words = EncodeMnemonics(private_seed, MoneroSharp.WordList.Languages.English);
             
             SetPrivateSeed(private_key_hex);
@@ -83,7 +79,7 @@ namespace MoneroSharp
             DeriveKeys();
         }
 
-        public static string DecodeMnemonics(string[] words, WordList.Languages language)
+        public static byte[] DecodeMnemonics(string[] words, WordList.Languages language)
         {
             if (language != WordList.Languages.English) {
                 throw new NotImplementedException("Word list language is not implemented!");
@@ -126,11 +122,18 @@ namespace MoneroSharp
                 private_key_hex += hex;
             }
 
-            return private_key_hex;
+            return MoneroUtils.PrivateKeyToBytes(private_key_hex);
+        }
+
+        public static byte[] DecodeMnemonics(string words, WordList.Languages language)
+        {
+            return DecodeMnemonics(words.Split(' '), language);
         }
 
         public static string[] EncodeMnemonics(byte[] private_seed, WordList.Languages language)
         {
+            private_seed = private_seed.Reverse().ToArray();
+            
             if (language != WordList.Languages.English) {
                 throw new NotImplementedException("Word list language is not implemented!");
             }
@@ -194,10 +197,7 @@ namespace MoneroSharp
         
         public void SetPrivateSeed(string private_key_hex)
         {
-            PrivateSeed = BigInteger.Parse(
-                private_key_hex,
-                System.Globalization.NumberStyles.AllowHexSpecifier
-            ).ToByteArray().Reverse().ToArray();
+            PrivateSeed = MoneroUtils.PrivateKeyToBytes(private_key_hex);
         }
 
         public void SetNetwork(MoneroNetwork network)
@@ -224,8 +224,6 @@ namespace MoneroSharp
             SecretSpendKey = pkey_padded.ToArray();
             ScalarOperations.sc_reduce(SecretSpendKey);
             SecretSpendKey = SecretSpendKey.Take(32).ToArray();
-
-            PrivateSeed = SecretSpendKey;
 
             SecretViewKey = pkey_hash_padded.ToArray();
             ScalarOperations.sc_reduce(SecretViewKey);

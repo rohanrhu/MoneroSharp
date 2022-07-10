@@ -46,6 +46,34 @@ Console.WriteLine("Pub Address:");
 Console.WriteLine(account.PublicAddressHex);
 ```
 
+## Encoding Private Seed to Mnemonics
+
+To encode private seed into Monero words you can use `MoneroSharp.MoneroAccount.EncodeMnemonics()`.
+
+```cs
+using MoneroSharp;
+using MoneroSharp.Utils;
+
+byte[] private_seed = MoneroUtils.PrivateKeyToBytes("4e25d92060638d875517575c5bd285f2208c86390fa29f597c31f5ee3bccae0e");
+string[] words = MoneroAccount.EncodeMnemonics(private_seed, MoneroSharp.WordList.Languages.English);
+
+Console.WriteLine(string.Join(' ', words));
+```
+
+## Decoding Private Seed to Mnemonics
+
+To decode private seed into Monero words you can use `MoneroSharp.MoneroAccount.DecodeMnemonics()`.
+
+```cs
+using MoneroSharp;
+using MoneroSharp.Utils;
+
+byte[] private_seed = MoneroAccount.DecodeMnemonics(words, MoneroSharp.WordList.Languages.English);
+
+Console.WriteLine("Private key from words:");
+Console.WriteLine(MoneroUtils.PrivateSeedToHex(private_seed));
+```
+
 ## Supported .Net Targets
 
 MoneroSharp supports most of .Net targets.
