@@ -23,7 +23,10 @@ namespace MoneroSharp
     {
         MoneroNetwork Network = MoneroNetwork.TESTNET;
 
+        public WordList.Languages Language = WordList.Languages.English;
+
         public byte[] PrivateSeed;
+        public string[] Words;
         
         public byte[] SecretSpendKey;
         public byte[] SecretViewKey;
@@ -41,6 +44,8 @@ namespace MoneroSharp
         
         public MoneroAccount(byte[] private_seed, MoneroNetwork network = MoneroNetwork.TESTNET)
         {
+            Words = EncodeMnemonics(private_seed, MoneroSharp.WordList.Languages.English);
+            
             SetPrivateSeed(private_seed);
             SetNetwork(network);
             DeriveKeys();
@@ -48,6 +53,13 @@ namespace MoneroSharp
 
         public MoneroAccount(string private_key_hex, MoneroNetwork network = MoneroNetwork.TESTNET)
         {
+            var private_seed = System.Numerics.BigInteger.Parse(
+                private_key_hex,
+                System.Globalization.NumberStyles.AllowHexSpecifier
+            ).ToByteArray().ToArray();
+
+            Words = EncodeMnemonics(private_seed, MoneroSharp.WordList.Languages.English);
+            
             SetPrivateSeed(private_key_hex);
             SetNetwork(network);
             DeriveKeys();
@@ -55,6 +67,8 @@ namespace MoneroSharp
         
         public MoneroAccount(string[] words, WordList.Languages language = WordList.Languages.English, MoneroNetwork network = MoneroNetwork.TESTNET)
         {
+            Words = words;
+
             SetPrivateSeed(DecodeMnemonics(words, language));
             SetNetwork(network);
             DeriveKeys();
@@ -62,7 +76,9 @@ namespace MoneroSharp
         
         public MoneroAccount(string words, WordList.Languages language = WordList.Languages.English, MoneroNetwork network = MoneroNetwork.TESTNET)
         {
-            SetPrivateSeed(DecodeMnemonics(words.Split(' '), language));
+            Words = words.Split(' ');
+            
+            SetPrivateSeed(DecodeMnemonics(Words, language));
             SetNetwork(network);
             DeriveKeys();
         }
@@ -113,6 +129,64 @@ namespace MoneroSharp
             return private_key_hex;
         }
 
+        public static string[] EncodeMnemonics(byte[] private_seed, WordList.Languages language)
+        {
+            if (language != WordList.Languages.English) {
+                throw new NotImplementedException("Word list language is not implemented!");
+            }
+
+            string[] wordlist = null;
+            string[] words = null;
+
+            if (language == WordList.Languages.English) {
+                wordlist = WordList.English.Words;
+                words = new string[25];
+            }
+
+            string hex = new BigInteger(private_seed).ToString("X");
+
+            for (int i = 0; i < hex.Length; i += 8) {
+                string to_swap = hex.Substring(i, 8);
+                string swapped = to_swap.Substring(6, 2) + to_swap.Substring(4, 2) + to_swap.Substring(2, 2) + to_swap.Substring(0, 2);
+                hex = hex.Substring(0, i) + swapped + hex.Substring(i+8);
+            }
+
+            int words_i = 0;
+
+            for (int i = 0; i < hex.Length; i += 8) {
+                string num =  hex.Substring(i, 8);
+                uint x = uint.Parse(num, System.Globalization.NumberStyles.HexNumber);
+                uint w1 = (uint)(x % wordlist.Length);
+                uint w2 = (uint)((Math.Floor(((double)x / (double)wordlist.Length)) + w1) % wordlist.Length);
+                uint w3 = (uint)(Math.Floor(Math.Floor((double)x / (double)wordlist.Length) / wordlist.Length + w2) % wordlist.Length);
+
+                words[words_i++] = wordlist[w1];
+                words[words_i++] = wordlist[w2];
+                words[words_i++] = wordlist[w3];
+            }
+
+            if (language == WordList.Languages.English) {
+                long index = GetWordsChecksum(words.SkipLast(1).ToArray(), WordList.English.PrefixLength);
+                string checksum = words[index];
+                words[words.Length-1] = checksum;
+            }
+
+            return words;
+        }
+
+        public static long GetWordsChecksum(string[] words, int prefix_length)
+        {
+            string trimmed = "";
+            for (int i = 0; i < words.Length; i++) {
+                trimmed += words[i].Substring(0, prefix_length);
+            }
+
+            long checksum = Convert.ToInt64(Force.Crc32.Crc32Algorithm.Compute(Encoding.ASCII.GetBytes(trimmed)));
+            long index = checksum % words.Length;
+
+            return index;
+        }
+
         public void SetPrivateSeed(byte[] private_seed)
         {
             PrivateSeed = private_seed;
@@ -150,6 +224,8 @@ namespace MoneroSharp
             SecretSpendKey = pkey_padded.ToArray();
             ScalarOperations.sc_reduce(SecretSpendKey);
             SecretSpendKey = SecretSpendKey.Take(32).ToArray();
+
+            PrivateSeed = SecretSpendKey;
 
             SecretViewKey = pkey_hash_padded.ToArray();
             ScalarOperations.sc_reduce(SecretViewKey);

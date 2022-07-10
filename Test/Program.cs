@@ -10,14 +10,16 @@
  */
 
 using System;
+using System.Linq;
 
 class Program {
     public static void Main(string[] args)
     {
         string words = "worry irritate mural vocal bogeys peeled nudged muddy uphill rewind python pairing bubble cottage hotel boil teeming dented demonstrate moment lamb love pride rudely worry";
-
         var account = new MoneroSharp.MoneroAccount(words, MoneroSharp.WordList.Languages.English, MoneroSharp.MoneroNetwork.MAINNET);
 
+        Console.WriteLine("Words:");
+        Console.WriteLine(string.Join(' ', account.Words));
         Console.WriteLine("Sec Spend Key:");
         Console.WriteLine(account.SecretSpendKeyHex);
         Console.WriteLine("Sec View Key:");
