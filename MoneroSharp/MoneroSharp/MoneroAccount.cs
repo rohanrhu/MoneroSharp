@@ -169,7 +169,7 @@ namespace MoneroSharp
             }
 
             if (language == WordList.Languages.English) {
-                long index = GetWordsChecksum(words.SkipLast(1).ToArray(), WordList.English.PrefixLength);
+                long index = GetWordsChecksum(words.Take(words.Length - 1).ToArray(), WordList.English.PrefixLength);
                 string checksum = words[index];
                 words[words.Length-1] = checksum;
             }

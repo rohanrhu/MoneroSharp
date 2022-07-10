@@ -57,7 +57,7 @@ using MoneroSharp.Utils;
 byte[] private_seed = MoneroUtils.PrivateKeyToBytes("4e25d92060638d875517575c5bd285f2208c86390fa29f597c31f5ee3bccae0e");
 string[] words = MoneroAccount.EncodeMnemonics(private_seed, MoneroSharp.WordList.Languages.English);
 
-Console.WriteLine(string.Join(' ', words));
+Console.WriteLine(string.Join(" ", words));
 ```
 
 ## Decoding Mnemonics to Private Seed
@@ -123,4 +123,5 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Thirdparty Licenses:
+
 * MoneroSharp/NaCl/LICENSE

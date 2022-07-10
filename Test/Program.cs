@@ -21,14 +21,14 @@ class Program {
         
         string words = "worry irritate mural vocal bogeys peeled nudged muddy uphill rewind python pairing bubble cottage hotel boil teeming dented demonstrate moment lamb love pride rudely worry";
 
-        var account = new MoneroSharp.MoneroAccount(
+        var account = new MoneroAccount(
             words,
             MoneroSharp.WordList.Languages.English,
             MoneroSharp.MoneroNetwork.MAINNET
         );
 
         Console.WriteLine("Words:");
-        Console.WriteLine(string.Join(' ', account.Words));
+        Console.WriteLine(string.Join(" ", account.Words));
         Console.WriteLine("Sec Spend Key:");
         Console.WriteLine(account.SecretSpendKeyHex);
         Console.WriteLine("Sec View Key:");
@@ -42,13 +42,10 @@ class Program {
         
         // Recover account from hex private key
         
-        account = new MoneroSharp.MoneroAccount(
-            "4e25d92060638d875517575c5bd285f2208c86390fa29f597c31f5ee3bccae0e",
-            MoneroSharp.MoneroNetwork.MAINNET
-        );
+        account = new MoneroAccount("4e25d92060638d875517575c5bd285f2208c86390fa29f597c31f5ee3bccae0e", MoneroSharp.MoneroNetwork.MAINNET);
 
         Console.WriteLine("Words:");
-        Console.WriteLine(string.Join(' ', account.Words));
+        Console.WriteLine(string.Join(" ", account.Words));
         Console.WriteLine("Sec Spend Key:");
         Console.WriteLine(account.SecretSpendKeyHex);
         Console.WriteLine("Sec View Key:");
@@ -72,10 +69,10 @@ class Program {
 
         // Recover account from private seed
 
-        account = new MoneroSharp.MoneroAccount(private_seed, MoneroNetwork.MAINNET);
+        account = new MoneroAccount(private_seed, MoneroNetwork.MAINNET);
 
         Console.WriteLine("Words:");
-        Console.WriteLine(string.Join(' ', account.Words));
+        Console.WriteLine(string.Join(" ", account.Words));
         Console.WriteLine("Sec Spend Key:");
         Console.WriteLine(account.SecretSpendKeyHex);
         Console.WriteLine("Sec View Key:");
@@ -91,7 +88,7 @@ class Program {
 
         private_seed = MoneroUtils.PrivateKeyToBytes("4e25d92060638d875517575c5bd285f2208c86390fa29f597c31f5ee3bccae0e");
         words = string.Join(
-            ' ',
+            " ",
             MoneroAccount.EncodeMnemonics(private_seed, MoneroSharp.WordList.Languages.English)
         );
 

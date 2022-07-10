@@ -46,7 +46,7 @@ namespace MoneroSharp.Utils {
 
         public static string PrivateSeedToHex(byte[] private_seed)
         {
-            var private_key = new BigInteger(private_seed, false, true);
+            var private_key = new BigInteger(private_seed.Reverse().ToArray());
             return private_key.ToString("X").ToLower();
         }
      }
