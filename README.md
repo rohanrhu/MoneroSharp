@@ -60,7 +60,7 @@ string[] words = MoneroAccount.EncodeMnemonics(private_seed, MoneroSharp.WordLis
 Console.WriteLine(string.Join(' ', words));
 ```
 
-## Decoding Private Seed to Mnemonics
+## Decoding Mnemonics to Private Seed
 
 To decode private seed into Monero words you can use `MoneroSharp.MoneroAccount.DecodeMnemonics()`.
 
