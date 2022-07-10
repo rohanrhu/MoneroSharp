@@ -74,7 +74,7 @@ MoneroSharp supports most of .Net targets.
 
 Copyright (c) 2022 Tabby Labs Inc.
 
-Copyright (c) 2022 Oğuzhan Eroğlu &lt;rohanrhu2@gmail.com&gt;
+Author, 2022 Oğuzhan Eroğlu &lt;rohanrhu2@gmail.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
