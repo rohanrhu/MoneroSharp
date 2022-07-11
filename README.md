@@ -34,6 +34,8 @@ var account = new MoneroSharp.MoneroAccount(private_seed, MoneroSharp.MoneroNetw
 ## Retrieving Monero keys
 
 ```cs
+Console.WriteLine("Words:");
+Console.WriteLine(string.Join(" ", account.Words));
 Console.WriteLine("Sec Spend Key:");
 Console.WriteLine(account.SecretSpendKeyHex);
 Console.WriteLine("Sec View Key:");
